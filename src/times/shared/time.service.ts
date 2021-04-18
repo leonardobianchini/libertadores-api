@@ -1,46 +1,32 @@
 import { Injectable } from '@nestjs/common';
 import { Time } from './time';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
 
 @Injectable()
 export class TimeService {
-    times: Time[] = [
-        { id: 1, nome: 'Internacional', estadio: 'Beira Rio', corPrincipal: 'Vermelho' },
-        { id: 2, nome: 'Palmeiras', estadio: 'Allianz Parque', corPrincipal: 'Verde' },
-        { id: 3, nome: 'Boca Juniors', estadio: 'La Bombonera', corPrincipal: 'Azul' }
-    ];
 
-    getAll(){
-        return this.times;
+    constructor(@InjectModel('Time') private readonly timeModel: Model<Time>){ }
+
+    async getAll(){
+        return await this.timeModel.find().exec();
     }
 
-    getById(id: number){
-        return this.times.find( el => el.id == id);
+    async getById(id: string){
+        return await this.timeModel.findById(id).exec();
     }
 
-    create(time: Time){
-        let lastId = 0;
-        if (this.times.length > 0) {
-            lastId = this.times[this.times.length -1].id;
-        }
-        time.id = lastId + 1;
-        this.times.push(time);
-
-        return time;
+    async create(time: Time){
+        const createdTime = new this.timeModel(time);
+        return await createdTime.save();
     }
 
-    update(time: Time){
-        const timeArray = this.getById(time.id);
-        if (timeArray) {
-            timeArray.nome = time.nome;
-            timeArray.estadio = time.estadio;
-            timeArray.corPrincipal = time.corPrincipal;
-        }
-
-        return timeArray;
+    async update(id: string, time: Time){
+        await this.timeModel.updateOne({_id: id}, time).exec();
+        return this.getById(id)
     }
 
-    delete(id: number){
-        const index = this.times.findIndex(el => el.id == id);
-        this.times.splice(index, 1);
+    async delete(id: string){
+        return await this.timeModel.deleteOne({ _id: id }).exec();
     }
 }

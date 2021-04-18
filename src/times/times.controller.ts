@@ -15,7 +15,7 @@ export class TimesController {
     }
 
     @Get(':id')
-    async getById(@Param('id') id: number) : Promise<Time> {
+    async getById(@Param('id') id: string) : Promise<Time> {
         return this.timeService.getById(id);
     }
 
@@ -25,13 +25,12 @@ export class TimesController {
     }
 
     @Put(':id')
-    async update(@Param('id') id: number, @Body() time: Time) : Promise<Time> {
-        time.id = id;
-        return this.timeService.update(time);
+    async update(@Param('id') id: string, @Body() time: Time) : Promise<Time> {
+        return this.timeService.update(id, time);
     }
 
     @Delete(':id')
-    async delete(@Param('id') id: number) {
+    async delete(@Param('id') id: string) {
         this.timeService.delete(id);
     }
 }
