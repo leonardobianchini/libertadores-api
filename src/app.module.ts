@@ -6,7 +6,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 
 @Module({
   imports: [
-    MongooseModule.forRoot('mongodb://admin:admin@localhost:8081/admin'), // link de conexao
+    MongooseModule.forRoot('mongodb+srv://libert:vtPxcNEa9e3N2SS@cluster0.gpumy.mongodb.net/myFirstDatabase?retryWrites=true&w=majority'),
     TimesModule
   ],
   controllers: [AppController],
